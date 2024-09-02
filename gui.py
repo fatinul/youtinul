@@ -1,5 +1,9 @@
-import tkinter as tk
+import os
+import sys
+import yt_dlp
 import customtkinter
+
+from pathlib import Path
 from tkinter import filedialog as fd
 
 customtkinter.set_appearance_mode(
@@ -17,6 +21,9 @@ class App(customtkinter.CTk):
         # configure window
         self.title("YouTinul")
         self.geometry(f"{1100}x{580}")
+
+        # default val
+        self.directory = "Downloads"
 
         # configure grid layout (4x4)
         self.grid_columnconfigure(1, weight=1)
@@ -49,20 +56,25 @@ class App(customtkinter.CTk):
         self.entry = customtkinter.CTkEntry(
             self, placeholder_text="Paste the link here.."
         )
-        self.entry.grid(
-            row=3, column=1, columnspan=2, padx=(20, 0), pady=(20, 20), sticky="nsew"
-        )
+        self.entry.grid(row=0, column=1, padx=(20, 0), pady=(20, 20), sticky="new")
 
-        self.main_button_1 = customtkinter.CTkButton(
+        self.extract_button = customtkinter.CTkButton(
             master=self,
             text="Extract",
             fg_color="transparent",
             border_width=2,
             text_color=("gray10", "#DCE4EE"),
-            command=print("Extract clicked"),
+            command=self.extract,
         )
-        self.main_button_1.grid(
+        self.extract_button.grid(
             row=3, column=3, padx=(20, 20), pady=(20, 20), sticky="nsew"
+        )
+
+        # create main entry and button
+        self.directory_label = customtkinter.CTkLabel(self, textvariable=self.directory)
+
+        self.directory_label.grid(
+            row=2, column=1, padx=(20, 0), pady=(20, 20), sticky="new"
         )
 
         self.open_button = customtkinter.CTkButton(
@@ -89,14 +101,12 @@ class App(customtkinter.CTk):
             self.slider_progressbar_frame
         )
         self.progressbar_1 = customtkinter.CTkProgressBar(self.slider_progressbar_frame)
-        self.progressbar_1.grid(
-            row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="ew"
-        )
+        self.progressbar_1.grid(row=5, column=0, columnspan=2, sticky="ew")
 
         # set default values
         self.appearance_mode_optionemenu.set("Dark")
         self.progressbar_1.configure(mode="indeterminnate")
-        self.progressbar_1.start()
+        # self.progressbar_1.start()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
@@ -104,6 +114,10 @@ class App(customtkinter.CTk):
     def select_directory(_ignore):
         directory = fd.askdirectory()
         print("directory: " + directory)
+
+    def extract(self):
+        link = self.entry.get()
+        print("link:" + link)
 
 
 if __name__ == "__main__":

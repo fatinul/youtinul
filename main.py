@@ -13,23 +13,23 @@ def extract_video(youtube_link, name):
 def extract_audio(youtube_link, name):
     """Extract mp3 audio"""
     print("--------> Extracting mp3 audio...")
-    audio_cmd = f"yt-dlp -x --audio-format mp3 {youtube_link} --output '{name}.mp3'"
+    audio_cmd = (
+        f"yt-dlp -x --audio-format mp3 {youtube_link} --output '{name}-audio.mp3'"
+    )
     subprocess.run(audio_cmd, shell=True)
 
 
 def merge_video_audio(name):
     """Merge video and audio"""
     print("--------> Merging video and audio...")
-    merge_cmd = (
-        f"ffmpeg -i '{name}-video.mp4' -i '{name}.mp3' -c:v copy -c:a aac {name}.mp4"
-    )
+    merge_cmd = f"ffmpeg -i '{name}-video.mp4' -i '{name}-audio.mp3' -c:v copy -c:a aac '{name}.mp4'"
     subprocess.run(merge_cmd, shell=True)
 
 
 def remove_video_audio(name):
     """Remove extracted files"""
     print("--------> Remove video and audio...")
-    remove_cmd = f"rm {name}-video.mp4 && rm {name}.mp3"
+    remove_cmd = f"rm '{name}-video.mp4' && rm '{name}-audio.mp3'"
     subprocess.run(remove_cmd, shell=True)
 
 
